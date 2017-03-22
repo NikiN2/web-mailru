@@ -1,3 +1,14 @@
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.bind(('0.0.0.0', 2222))
+s.listen(20)
+while True:
+    conn, addr = s.accept()
+    while True:
+        data = conn.recv(1024)
+        if not data: break
+        conn.send(data)
+    conn.close()
 
 
 #!/usr/local/bin/python
@@ -16,8 +27,8 @@ while True:
     child_pid = os.fork()
     if child_pid == 0:
         request = client_socket.recv(1024)
-        client_socket.send(request.upper())
-        #print '(child {}) {} : {}'.format(client_socket.getpeername(), request)
+        client_socket.send(request)
+        print '(child {}) {} : {}'.format(client_socket.getpeername(), request)
         client_socket.close()
         sys.exit()
     else:
